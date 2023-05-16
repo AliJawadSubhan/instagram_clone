@@ -27,15 +27,12 @@ class CustomTextFeild extends StatelessWidget {
           fontWeight: FontWeight.w300,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide(color: Colors.grey[400]!, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide(color: Colors.grey[400]!, width: 1),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide(color: Colors.red, width: 1),
         ),
         // prefixIcon: Icon(Icons.lock, color: Colors.grey[600]),
