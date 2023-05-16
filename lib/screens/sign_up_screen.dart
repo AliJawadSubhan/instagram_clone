@@ -1,16 +1,41 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:instagram_clone/resources/auth_methods.dart';
 import 'package:instagram_clone/screens/login_screen.dart';
 import 'package:instagram_clone/utils/colors.dart';
+import 'package:instagram_clone/utils/components/pick_image.dart';
 import 'package:instagram_clone/utils/components/sizebox_functions.dart';
 import 'package:instagram_clone/utils/components/widgets/custom_textfield.dart';
 
-class SignUp extends StatelessWidget {
+class SignUp extends StatefulWidget {
   SignUp({super.key});
+
+  @override
+  State<SignUp> createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
   TextEditingController emailController = TextEditingController();
+
   TextEditingController passwordController = TextEditingController();
+
   TextEditingController bioController = TextEditingController();
+
   TextEditingController usernameController = TextEditingController();
+
+  Uint8List? image;
+
+  // bool isLoading = false;
+  pickedImage() async {
+    Uint8List im = await pickImage(ImageSource.gallery);
+    setState(() {
+      image = im;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,8 +65,10 @@ class SignUp extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 50.0,
-                    backgroundImage:
-                        NetworkImage('https://via.placeholder.com/100'),
+                    backgroundImage: image != null
+                        ? MemoryImage(image!)
+                        : NetworkImage('https://via.placeholder.com/100')
+                            as ImageProvider,
                     backgroundColor: Colors.transparent,
                   ),
                   Positioned(
@@ -49,13 +76,15 @@ class SignUp extends StatelessWidget {
                     right: -10,
                     child: RawMaterialButton(
                       onPressed: () {
+                        // pickImage(imageSource)
+                        pickedImage();
                         // Implement your image picker logic here.
                       },
                       elevation: 2.0,
                       fillColor: Colors.white,
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(10.0),
-                      child: Icon(
+                      shape: const CircleBorder(),
+                      padding: const EdgeInsets.all(10.0),
+                      child: const Icon(
                         Icons.photo_library,
                         size: 20.0,
                         color: Colors.black,
@@ -95,7 +124,16 @@ class SignUp extends StatelessWidget {
               addHorizontalHeight(24.0),
               Material(
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () async {
+                    final response = await AuthMethods().signUpUser(
+                      email: emailController.text,
+                      passowrd: passwordController.text,
+                      username: usernameController.text,
+                      bio: bioController.text,
+                    );
+
+                    print(response);
+                  },
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(
@@ -142,7 +180,7 @@ class SignUp extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                         vertical: 0,
                       ),
-                      child: Text(
+                      child: const Text(
                         " login",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,

@@ -1,29 +1,39 @@
-import 'dart:typed_data';
 
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  Future<String> signUpUser(
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Future<bool> signUpUser(
       {required String email,
       required String passowrd,
       required String username,
       required String bio,
-      required Uint8List file}) async {
-    String response = 'Some Error occured';
+     }) async {
+    bool response = false;
     try {
       if (email.isNotEmpty ||
           passowrd.isNotEmpty ||
           username.isNotEmpty ||
-          bio.isNotEmpty ||
-          file.isNotEmpty) {
+          bio.isNotEmpty ) {
         UserCredential credentials = await _auth.createUserWithEmailAndPassword(
             email: email, password: passowrd);
+        var data = {
+          'email': "$email",
+          'username': '$username',
+          'bio': bio,
+          'uid': '${credentials.user!.uid}',
+          'followers': [],
+          'following': [],
+        };
+         await _firestore.collection("users").doc(credentials.user!.uid).set(data);
+        response = true;
       }
     } catch (e) {
-      response = e.toString();
+      response = false;
     }
+    return response;
   }
 }
