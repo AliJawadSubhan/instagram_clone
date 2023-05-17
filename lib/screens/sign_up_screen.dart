@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -67,7 +66,7 @@ class _SignUpState extends State<SignUp> {
                     radius: 50.0,
                     backgroundImage: image != null
                         ? MemoryImage(image!)
-                        : NetworkImage('https://via.placeholder.com/100')
+                        : const NetworkImage('https://via.placeholder.com/100')
                             as ImageProvider,
                     backgroundColor: Colors.transparent,
                   ),
@@ -130,6 +129,7 @@ class _SignUpState extends State<SignUp> {
                       passowrd: passwordController.text,
                       username: usernameController.text,
                       bio: bioController.text,
+                      file: image!, 
                     );
 
                     print(response);
